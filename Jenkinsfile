@@ -17,10 +17,17 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 bat '''
-                    docker stop hello-docker || exit 0
-                    docker rm hello-docker || exit 0
-                    docker run -d -p 5000:5000 --name hello-docker hello-docker:v1
+                docker stop hello-docker || exit 0
+                docker rm hello-docker || exit 0
+                docker run -d -p 5000:5000 --name hello-docker hello-docker:v1
                 '''
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                // Replace <DOCKER_PASSWORD> with your Docker Hub password or access token
+                bat 'docker login -u santoshkumar711 -p <DOCKER_PASSWORD>'
             }
         }
 
