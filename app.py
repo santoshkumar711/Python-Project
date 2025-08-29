@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "hello santosh kumar i successfuly deployed project on cloud ."
+    return "hello santosh kumar i successfuly deployed project on cloud Aws git ."
 
 if __name__ == "__main__":
     # Container ko alive rakhne ke liye Flask server run karenge
