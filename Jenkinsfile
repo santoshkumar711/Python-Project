@@ -15,34 +15,33 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ."
             }
         }
 
         stage('Stop Existing Container') {
             steps {
-                // Agar container exist nahi karta to ignore karo
-                bat "docker stop %IMAGE_NAME% || exit 0"
-                bat "docker rm %IMAGE_NAME% || exit 0"
+                sh "docker stop $IMAGE_NAME || true"
+                sh "docker rm $IMAGE_NAME || true"
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                bat "docker run -d --name %IMAGE_NAME% -p 5000:5000 %IMAGE_NAME%:%IMAGE_TAG%"
+                sh "docker run -d --name $IMAGE_NAME -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
             }
         }
 
         stage('Docker Login & Push') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds', // ya tumhara credentials ID
+                    credentialsId: 'dockerhub-creds',
                     usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD'
                 )]) {
-                    bat "docker login -u %USERNAME% -p %PASSWORD%"
-                    bat "docker tag %IMAGE_NAME%:%IMAGE_TAG% %USERNAME%/%IMAGE_NAME%:%IMAGE_TAG%"
-                    bat "docker push %USERNAME%/%IMAGE_NAME%:%IMAGE_TAG%"
+                    sh "docker login -u $USERNAME -p $PASSWORD"
+                    sh "docker tag $IMAGE_NAME:$IMAGE_TAG $USERNAME/$IMAGE_NAME:$IMAGE_TAG"
+                    sh "docker push $USERNAME/$IMAGE_NAME:$IMAGE_TAG"
                 }
             }
         }
