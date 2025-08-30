@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "santoshkumar711/hello-python"
+        IMAGE_NAME = "hello-python"
         IMAGE_TAG = "v1"
     }
 
